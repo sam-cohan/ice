@@ -21,8 +21,10 @@ logger = logging.getLogger(__name__)
 
 dist_dir = Path(__file__).parent / "ui"
 
+# Get the root path from the environment variable
+root_path = os.environ.get("ICE_ROOT_PATH", "")
 
-app = FastAPI()
+app = FastAPI(root_path=root_path)
 
 
 # Add cache-control: no-transform header to all responses
@@ -39,16 +41,19 @@ app.add_middleware(BaseHTTPMiddleware, dispatch=add_no_transform_header)
 
 app.include_router(traces.router)
 app.mount(
-    "/api/traces/", StaticFiles(directory=traces_dir), name="static"
+    f"{root_path}/api/traces/", StaticFiles(directory=traces_dir), name="static"
 )  # see comment on get_trace
 
 try:
-    app.mount("/assets/", StaticFiles(directory=dist_dir / "assets"), name="static")
+    app.mount(
+        f"{root_path}/assets/",
+        StaticFiles(directory=dist_dir / "assets"),
+        name="static",
+    )
 except RuntimeError:
     logger.warning(
         "ui folder not found, skipping static file mount. Run `npm run build` to build the ui."
     )
-
 
 PING_RESPONSE = "ought-ice says pong"
 
