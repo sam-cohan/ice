@@ -35,6 +35,8 @@ import {
 } from "/components/TracePage/FString";
 import { StringToScalar, Table } from "./Table";
 
+const rootPath = import.meta.env.ICE_ROOT_PATH || "";
+
 const elicitStyle = {
   "hljs-keyword": { color: COLORS.indigo[600] }, // use primary color for keywords
   "hljs-operator": { color: COLORS.indigo[600] }, // use primary color for operators
@@ -143,7 +145,7 @@ const applyUpdates = (calls: Calls, updates: Record<string, unknown>) =>
   });
 
 const urlPrefix = (traceId: string) => {
-  const base = recipes[traceId] ? "https://oughtinc.github.io/static" : "/api";
+  const base = recipes[traceId] ? "https://oughtinc.github.io/static" : `${rootPath}/api`;
   return `${base}/traces/${traceId}`;
 };
 

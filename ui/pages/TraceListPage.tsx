@@ -3,11 +3,17 @@ import { Link } from "react-router-dom";
 
 export default function TraceListPage() {
   const [traces, setTraces] = useState<string[]>([]);
+
+  // Get the rootPath from import.meta.env
+  const rootPath = import.meta.env.ICE_ROOT_PATH || "";
+
   useEffect(() => {
-    fetch("/api/traces/")
+    // Update your fetch call to use the rootPath
+    fetch(`${rootPath}/api/traces/`)
       .then(res => res.json())
       .then(setTraces);
   }, []);
+
   return traces.length === 0 ? (
     <div className="m-8">
       No traces yet! Create your first one by following the&nbsp;
